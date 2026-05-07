@@ -57,4 +57,56 @@ function guardarTasa(){
     tasaInteres = tasa;
     mostrarTexto("mensajeTasa", "Tasa configurada correctamente: " + tasa + "%");
 }
+
+function guardarCliente(){
+    let cedula = recuperaraTexto("cedula");
+    let nombre = recuperaraTexto("nombre");
+    let apellido = recuperaraTexto("apellido");
+    let ingresos = recuperarFloat("ingresos");
+    let egresos = recuperarFloat("egresos");    
+    if(cedula === "" || nombre === "" || apellido === "" || isNaN(ingresos) || isNaN(egresos)){
+        alert("Complete todos los campos correctamente");
+        return;
+    }
+    let cliente = {
+        cedula: cedula,
+        nombre: nombre,
+        apellido: apellido,
+        ingresos: ingresos,
+        egresos: egresos
+    }
+
+    clientes.push(cliente);
+    pintarClientes();
+    limpiarFormulario();
+}
+
+function pintarClientes(){
+    let tabla = document.getElementById("tablaClientes");
+    tabla.innerHTML = "";
+    
+ for(let i = 0; i < clientes.length; i++){
+
+        let c = clientes[i];
+
+        tabla.innerHTML += `
+        <tr> 
+            <td>${c.cedula}</td>
+            <td>${c.nombre}</td>
+            <td>${c.apellido}</td>
+            <td>${c.ingresos}</td>
+            <td>${c.egresos}</td>
+            <td>
+                <button onclick="actualizarCliente(${i})">Actualizar</button></td>
+        </tr>
+        `;
+    }
+}
+function limpiarFormulario(){
+    mostrarTextoEnCaja("cedula", "");
+    mostrarTextoEnCaja("nombre", "");
+    mostrarTextoEnCaja("apellido", "");
+    mostrarTextoEnCaja("ingresos", "");
+    mostrarTextoEnCaja("egresos", "");
+}
     
