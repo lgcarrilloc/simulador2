@@ -186,3 +186,22 @@ function evaluarCredito(){
         mostrarTexto("resultadoCredito", "❌ Crédito RECHAZADO");
     }
 }
+
+function buscarClienteCredito(){
+    let cedula = recuperaraTexto("cedulaBusqueda");
+    let cliente = buscarCliente(cedula);
+    let contenedor = document.getElementById("datosClienteCredito");
+    if(cliente != null){
+        contenedor.innerHTML = `
+        <h3>Datos del Cliente</h3>
+        <p><strong>Cédula:</strong> ${cliente.cedula}</p>
+        <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+        <p><strong>Apellido:</strong> ${cliente.apellido}</p>
+        <p><strong>Ingresos:</strong> ${cliente.ingresos}</p>
+        <p><strong>Egresos:</strong> ${cliente.egresos}</p>
+        `;
+        clienteSeleccionado = cliente;
+    } else {
+        contenedor.innerHTML = "<p style='color:red;'>Cliente no encontrado</p>";
+    }
+}
