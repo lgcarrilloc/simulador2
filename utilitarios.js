@@ -150,3 +150,39 @@ function buscarCliente(cedula){
     }
     return null;
 }
+function buscarClienteCredito(){
+    let cedula = recuperaraTexto("cedulaBusqueda");
+    let cliente = buscarCliente(cedula);
+
+    if(cliente == null){
+        mostrarTexto("datosCliente", "Cliente no encontrado");
+        return;
+    }
+
+    mostrarTexto("datosCliente",
+        cliente.nombre + " " + cliente.apellido +
+        " | Ingresos: " + cliente.ingresos +
+        " | Egresos: " + cliente.egresos
+    );
+
+    clienteSeleccionado = cliente;
+}
+
+function evaluarCredito(){
+    if(clienteSeleccionado == null){
+        mostrarTexto("resultadoCredito", "Primero busque un cliente");
+        return;
+    }
+    let monto = recuperarFloat("monto");
+    if(isNaN(monto)){
+        mostrarTexto("resultadoCredito", "Ingrese un monto válido");
+        return;
+    }
+    let capacidadPago = clienteSeleccionado.ingresos - clienteSeleccionado.egresos;
+    let cuota = monto * (tasaInteres / 100);
+    if(cuota <= capacidadPago * 0.4){
+        mostrarTexto("resultadoCredito", "✅ Crédito APROBADO");
+    }else{
+        mostrarTexto("resultadoCredito", "❌ Crédito RECHAZADO");
+    }
+}
