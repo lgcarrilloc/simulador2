@@ -205,3 +205,66 @@ function buscarClienteCredito(){
         contenedor.innerHTML = "<p style='color:red;'>Cliente no encontrado</p>";
     }
 }
+
+function calcularDisponible(ingresos, egresos) {
+    return Math.max(ingresos - egresos, 0);
+}
+
+function calcularCapacidadDePago(disponible) {
+    return disponible / 2;
+}
+
+function calcularInteresSimple(monto, tasa, anios) {
+    return monto * (tasa / 100) * anios;
+}
+
+function calcularTotalPagar(monto, interes) {
+    return monto + interes + 100; // SOLCA
+}
+
+function calcularCuotaMensual(total, anios) {
+    return total / (anios * 12);
+}
+
+function aprobarCredito(capacidad, cuota) {
+    return capacidad > cuota;
+}
+
+function evaluarCredito(){
+    if(clienteSeleccionado == null){
+        mostrarTexto("resultadoCredito", "Primero busque un cliente");
+        return;
+    }
+    let ingresos = clienteSeleccionado.ingresos;
+    let egresos = clienteSeleccionado.egresos;
+    let monto = recuperarFloat("monto");
+    let plazo = recuperarInt("plazo"); // años
+    let tasa = tasaInteres; // usas la configurada
+
+    if(isNaN(monto) || monto <= 0){
+        mostrarTexto("resultadoCredito", "Ingrese un monto válido");
+        return;
+    }
+    if(isNaN(plazo) || plazo <= 0){
+        mostrarTexto("resultadoCredito", "Ingrese un plazo válido");
+        return;
+    }
+    let disponible = calcularDisponible(ingresos, egresos);
+    let capacidad = calcularCapacidadDePago(disponible);
+    let interes = calcularInteresSimple(monto, tasa, plazo);
+    let total = calcularTotalPagar(monto, interes);
+    let cuota = calcularCuotaMensual(total, plazo);
+    let aprobado = aprobarCredito(capacidad, cuota);
+
+    let resultado = document.getElementById("resultadoCredito");
+    resultado.innerHTML = `
+        <p><strong>Capacidad de pago:</strong> $${capacidad.toFixed(2)}</p>
+        <p><strong>Total a pagar:</strong> $${total.toFixed(2)}</p>
+        <p><strong>Cuota mensual:</strong> $${cuota.toFixed(2)}</p>
+        <p><strong>Resultado:</strong> 
+            ${aprobado ? "✅ CRÉDITO APROBADO" : "❌ CRÉDITO RECHAZADO"}
+        </p>
+    `;
+}
+
+
