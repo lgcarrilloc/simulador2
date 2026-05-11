@@ -232,23 +232,21 @@ function aprobarCredito(capacidad, cuota) {
 
 function evaluarCredito(){
     if(clienteSeleccionado == null){
-        mostrarTexto("resultadoCredito", "Primero busque un cliente");
+        document.getElementById("resultadoCredito").innerHTML = "Primero busque un cliente";
         return;
     }
+
     let ingresos = clienteSeleccionado.ingresos;
     let egresos = clienteSeleccionado.egresos;
     let monto = recuperarFloat("monto");
-    let plazo = recuperarInt("plazo"); // años
-    let tasa = tasaInteres; // usas la configurada
+    let plazo = recuperarInt("plazo");
+    let tasa = tasaInteres;
 
-    if(isNaN(monto) || monto <= 0){
-        mostrarTexto("resultadoCredito", "Ingrese un monto válido");
+    if(isNaN(monto) || isNaN(plazo)){
+        document.getElementById("resultadoCredito").innerHTML = "Datos inválidos";
         return;
     }
-    if(isNaN(plazo) || plazo <= 0){
-        mostrarTexto("resultadoCredito", "Ingrese un plazo válido");
-        return;
-    }
+
     let disponible = calcularDisponible(ingresos, egresos);
     let capacidad = calcularCapacidadDePago(disponible);
     let interes = calcularInteresSimple(monto, tasa, plazo);
@@ -257,13 +255,12 @@ function evaluarCredito(){
     let aprobado = aprobarCredito(capacidad, cuota);
 
     let resultado = document.getElementById("resultadoCredito");
+
     resultado.innerHTML = `
-        <p><strong>Capacidad de pago:</strong> $${capacidad.toFixed(2)}</p>
-        <p><strong>Total a pagar:</strong> $${total.toFixed(2)}</p>
-        <p><strong>Cuota mensual:</strong> $${cuota.toFixed(2)}</p>
-        <p><strong>Resultado:</strong> 
-            ${aprobado ? "✅ CRÉDITO APROBADO" : "❌ CRÉDITO RECHAZADO"}
-        </p>
+    Capacidad de pago: ${capacidad.toFixed(2)}<br>
+    Total a pagar: ${total.toFixed(2)}<br>
+    Cuota mensual: ${cuota.toFixed(2)}<br>
+    RESULTADO: ${aprobado ? "APROBADO" : "RECHAZADO"}
     `;
 }
 
