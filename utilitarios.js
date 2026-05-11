@@ -231,37 +231,29 @@ function aprobarCredito(capacidad, cuota) {
 }
 
 function evaluarCredito(){
-    if(clienteSeleccionado == null){
-        document.getElementById("resultadoCredito").innerHTML = "Primero busque un cliente";
-        return;
-    }
-
     let ingresos = clienteSeleccionado.ingresos;
     let egresos = clienteSeleccionado.egresos;
     let monto = recuperarFloat("monto");
     let plazo = recuperarInt("plazo");
     let tasa = tasaInteres;
-
-    if(isNaN(monto) || isNaN(plazo)){
-        document.getElementById("resultadoCredito").innerHTML = "Datos inválidos";
-        return;
-    }
-
     let disponible = calcularDisponible(ingresos, egresos);
     let capacidad = calcularCapacidadDePago(disponible);
     let interes = calcularInteresSimple(monto, tasa, plazo);
     let total = calcularTotalPagar(monto, interes);
     let cuota = calcularCuotaMensual(total, plazo);
     let aprobado = aprobarCredito(capacidad, cuota);
-
     let resultado = document.getElementById("resultadoCredito");
-
     resultado.innerHTML = `
     Capacidad de pago: ${capacidad.toFixed(2)}<br>
     Total a pagar: ${total.toFixed(2)}<br>
     Cuota mensual: ${cuota.toFixed(2)}<br>
     RESULTADO: ${aprobado ? "APROBADO" : "RECHAZADO"}
     `;
-}
 
+    if(aprobado){
+        resultado.className = "aprobado";
+    }else{
+        resultado.className = "rechazado";
+    }
+}
 
